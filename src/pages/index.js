@@ -1,64 +1,30 @@
 import React from 'react'
 import { Link, graphql } from 'gatsby'
 
-import Bio from '../components/bio'
-import Layout from '../components/layout'
-import SEO from '../components/seo'
+import Layout from '../components/Layout'
+import SEO from '../components/SEO'
+import BlogPostList from '../components/BlogPostList'
+import InstaPostGrid from '../components/InstaPostGrid'
 
 const BlogIndex = ({ data, location }) => {
-  const siteTitle = data.site.siteMetadata?.title || `Title`
+  const siteTitle = data.site.siteMetadata?.title
+  const siteTagline = data.site.siteMetadata?.description
   const posts = data.allMarkdownRemark.nodes
+  const instaPosts = data.allInstaNode.nodes
 
-  if (posts.length === 0) {
-    return (
-      <Layout location={location} title={siteTitle}>
-        <SEO title="All posts" />
-        <Bio />
+  return (
+    <Layout location={location} title={siteTitle} tagline={siteTagline}>
+      <SEO title={siteTitle} description={siteTagline} />
+      {posts.length ? (
+        <BlogPostList posts={posts} />
+      ) : (
         <p>
           No blog posts found. Add markdown posts to "content/blog" (or the
           directory you specified for the "gatsby-source-filesystem" plugin in
           gatsby-config.js).
         </p>
-      </Layout>
-    )
-  }
-
-  return (
-    <Layout location={location} title={siteTitle}>
-      <SEO title="All posts" />
-      <Bio />
-      <ol style={{ listStyle: `none` }}>
-        {posts.map(post => {
-          const title = post.frontmatter.title || post.fields.slug
-
-          return (
-            <li key={post.fields.slug}>
-              <article
-                className="post-list-item"
-                itemScope
-                itemType="http://schema.org/Article"
-              >
-                <header>
-                  <h2>
-                    <Link to={post.fields.slug} itemProp="url">
-                      <span itemProp="headline">{title}</span>
-                    </Link>
-                  </h2>
-                  <small>{post.frontmatter.date}</small>
-                </header>
-                <section>
-                  <p
-                    dangerouslySetInnerHTML={{
-                      __html: post.frontmatter.description || post.excerpt,
-                    }}
-                    itemProp="description"
-                  />
-                </section>
-              </article>
-            </li>
-          )
-        })}
-      </ol>
+      )}
+      <InstaPostGrid posts={instaPosts} />
     </Layout>
   )
 }
@@ -70,19 +36,32 @@ export const pageQuery = graphql`
     site {
       siteMetadata {
         title
+        description
       }
     }
     allMarkdownRemark(sort: { fields: [frontmatter___date], order: DESC }) {
       nodes {
-        excerpt
         fields {
           slug
         }
+        excerpt
+        id
+        timeToRead
         frontmatter {
-          date(formatString: "MMMM DD, YYYY")
+          date(formatString: "MMM DD")
           title
           description
+          image {
+            publicURL
+          }
         }
+      }
+    }
+    allInstaNode(sort: { fields: [timestamp], order: DESC }) {
+      nodes {
+        id
+        caption
+        preview
       }
     }
   }

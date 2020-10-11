@@ -1,11 +1,11 @@
 module.exports = {
   siteMetadata: {
-    title: 'Gatsby Starter Blog',
+    title: 'Slow Rituals',
     author: {
       name: 'Kyle Mathews',
       summary: 'who lives and works in San Francisco building useful things.',
     },
-    description: 'A starter blog demonstrating what Gatsby can do.',
+    description: 'The way to a calmer and happier life',
     siteUrl: 'https://gatsby-starter-blog-demo.netlify.app/',
     social: {
       twitter: 'kylemathews',
@@ -70,6 +70,15 @@ module.exports = {
       },
     },
     'gatsby-plugin-react-helmet',
+    'gatsby-plugin-styled-components',
+    'gatsby-plugin-fontawesome-css',
+    {
+      resolve: 'gatsby-source-instagram',
+      options: {
+        username: '42724040210',
+      },
+    },
+
     // this (optional) plugin enables Progressive Web App + Offline functionality
     // To learn more, visit: https://gatsby.dev/offline
     // 'gatsby-plugin-offline',
